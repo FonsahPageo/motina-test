@@ -1,0 +1,45 @@
+services:
+  jenkins:
+    build: 
+      context: .
+      dockerfile: Dockerfile.jenkins
+    container_name: motinajenkins
+    user: root
+    ports:
+      - "8088:8088"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - JAVA_OPTS=-Xms512m -Xmx2048m
+      - JENKINS_OPTS=--httpPort=8088
+    restart: unless-stopped
+    networks:
+      - jenkins_ansible_net
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8088/login || exit 1"]
+      interval: 30s
+      retries: 3
+
+  ansible:
+    build:
+      context: .
+      dockerfile: Dockerfile.ansible
+    container_name: ansible
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    networks:
+      - jenkins_ansible_net
+    healthcheck:
+      test: ["CMD", "ansible", "--version"]
+      interval: 30s
+      retries: 3
+
+volumes:
+  jenkins_home:
+
+networks:
+  jenkins_ansible_net:
+    driver: bridge

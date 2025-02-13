@@ -1,0 +1,9 @@
+---
+- name: Install Git on Remote Machine
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Install Git
+      package:
+        name: git
+        state: present

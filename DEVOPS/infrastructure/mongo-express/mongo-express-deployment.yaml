@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mongo-express
+  name: mongo-express
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-express
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mongo-express
+    spec:
+      containers:
+        - image: mongo-express
+          name: mongo-express
+          ports:
+            - containerPort: 8081
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongo-express-claim0
+          env:
+            - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+              value: mongo
+            - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+              value: password
+            - name: ME_CONFIG_MONGODB_SERVER
+              value: mongo
+
+      restartPolicy: Always
+      volumes:
+        - name: mongo-express-claim0
+          persistentVolumeClaim:
+            claimName: mongo-express-claim0
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mongo-express
+  name: mongo-express
+spec:
+  ports:
+    - name: "8081"
+      port: 8081
+      targetPort: 8081
+  selector:
+    app: mongo-express
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: mongo-express-claim0
+  name: mongo-express-claim0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}
