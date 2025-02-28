@@ -21,17 +21,17 @@ pipeline {
             }
         }
 
+        stage('Check for AWS Credentials') {
+            steps {
+                sh 'echo $AWS_ACCESS_KEY_ID'
+            }
+        }
+
         // stage('List Files') {
         //     steps {
         //         sh 'ls -l /terraform'
         //     }
         // }
-
-        stage('Debug AWS Credentials') {
-            steps {
-                sh 'echo $AWS_ACCESS_KEY_ID'
-            }
-        }
 
         stage('Terraform Plan') {
             steps {
