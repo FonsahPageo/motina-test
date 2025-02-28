@@ -21,6 +21,12 @@ pipeline {
             }
         }
 
+        stage('List Files') {
+            steps {
+                sh 'ls -l /terraform'
+            }
+        }
+
         stage('Terraform Plan') {
             steps {
                 dir('terraform') {
