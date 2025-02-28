@@ -27,6 +27,12 @@ pipeline {
         //     }
         // }
 
+        stage('Debug AWS Credentials') {
+            steps {
+                sh 'echo $AWS_ACCESS_KEY_ID'
+            }
+        }
+
         stage('Terraform Plan') {
             steps {
                 dir('terraform') {

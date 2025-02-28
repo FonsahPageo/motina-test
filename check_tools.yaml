@@ -1,0 +1,54 @@
+---
+- name: Check installation of tools on VPS
+  hosts: your_vps_host # Replace with your actual host or group
+  gather_facts: no
+
+  tasks:
+    - name: Check Python version
+      command: python3 --version
+      register: python_version_check
+      changed_when: false
+
+    - name: Check if Kustomize is installed
+      command: kustomize version
+      register: kustomize_check
+      changed_when: false
+      ignore_errors: yes
+
+    - name: Check if PyYAML is installed
+      command: python3 -c "import yaml; print(yaml.__version__)"
+      register: pyyaml_check
+      changed_when: false
+      ignore_errors: yes
+
+    - name: Check pip3 version
+      command: pip3 --version
+      register: pip3_check
+      changed_when: false
+
+    - name: Check if Helm is installed
+      command: helm version
+      register: helm_check
+      changed_when: false
+      ignore_errors: yes
+
+    # Display results
+    - name: Display Python version check result
+      debug:
+        msg: "{{ python_version_check.stdout }}"
+
+    - name: Display Kustomize check result
+      debug:
+        msg: "{{ kustomize_check.stdout | default('Kustomize not installed') }}"
+
+    - name: Display PyYAML check result
+      debug:
+        msg: "{{ pyyaml_check.stdout | default('PyYAML not installed') }}"
+
+    - name: Display pip3 version check result
+      debug:
+        msg: "{{ pip3_check.stdout }}"
+
+    - name: Display Helm check result
+      debug:
+        msg: "{{ helm_check.stdout | default('Helm not installed') }}"
