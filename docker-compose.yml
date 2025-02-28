@@ -1,9 +1,10 @@
 services:
   jenkins:
-    build: 
+    # image: ashprince/jenkins-ansible:latest
+    build:
       context: .
-      dockerfile: Dockerfile.jenkins
-    container_name: motinajenkins
+      dockerfile: Dockerfile.ansible
+    container_name: jenkins-ansible
     user: root
     ports:
       - "8088:8088"
@@ -22,24 +23,5 @@ services:
       interval: 30s
       retries: 3
 
-  ansible:
-    build:
-      context: .
-      dockerfile: Dockerfile.ansible
-    container_name: ansible
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: unless-stopped
-    networks:
-      - jenkins_ansible_net
-    healthcheck:
-      test: ["CMD", "ansible", "--version"]
-      interval: 30s
-      retries: 3
-
 volumes:
   jenkins_home:
-
-networks:
-  jenkins_ansible_net:
-    driver: bridge
