@@ -37,7 +37,7 @@ pipeline {
 
         stage('Approval') {
             steps {
-                input message: "Approve Terraform Apply?"
+                input message: 'Approve Terraform Apply?'
             }
         }
 
@@ -53,7 +53,7 @@ pipeline {
     post {
         always {
             // Optionally, clean up workspace or perform additional actions.
-            echo "Pipeline complete."
+            echo 'Pipeline complete.'
         }
     }
 }
